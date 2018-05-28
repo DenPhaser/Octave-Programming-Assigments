@@ -67,6 +67,62 @@ Theta2_grad = zeros(size(Theta2));
 
 
 
+% recode labels as vectors containing only values 0 or 1
+Y = zeros(m, num_labels);
+for i=1:m,
+  Y(i, y(i)) = 1;
+end
+
+X1 = [ones(m, 1) X];
+
+a2 = [ones(m, 1) sigmoid(X1 * Theta1')];
+a3 = sigmoid(a2 * Theta2');
+h = a3;
+
+% calculate regularization
+r = lambda / 2 / m * (sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2)));
+
+% calculate cost function with regularization
+J = 1 / m * sum(sum(-Y .* log(h) - (1 - Y) .* log(1 - h))) + r;
+
+
+
+% Calculating gradients
+for t = 1:m,   
+  
+  % 1. Set the input layer’s values (a(1)) to the t-th training example x(t)
+  a1 = X1(t, :)';
+  yi = Y(t, :)';
+  
+  % Perform a feedforward pass (Figure 2), computing the activations
+  % (z(2); a(2); z(3); a(3)) for layers 2 and 3
+  z2 = (Theta1 * a1);
+  a2 = [1; sigmoid(z2)];
+  z3 = Theta2 * a2;
+  a3 = sigmoid(z3);
+  
+  % 2. For each output unit k in layer 3 (the output layer), set sigma value
+  sigma3 = a3 - yi;
+  
+  % 3. For the hidden layer l = 2, set sigma value
+  sigma2 = (Theta2' * sigma3) .* sigmoidGradient([1; z2]);
+  sigma2 = sigma2(2:end);
+  
+  % 4. Accumulate the gradient
+  Theta1_grad = Theta1_grad + sigma2 * a1';
+  Theta2_grad = Theta2_grad + sigma3 * a2'; 
+  
+end
+
+% 5. Obtain the (unregularized) gradient for the neural network cost function  
+Theta1_grad = 1 / m * Theta1_grad;
+Theta2_grad = 1 / m * Theta2_grad;
+
+% Add regularization param
+r1 = lambda / m * [zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
+r2 = lambda / m * [zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
+Theta1_grad = Theta1_grad + r1;
+Theta2_grad = Theta2_grad + r2;
 
 
 
