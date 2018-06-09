@@ -25,6 +25,28 @@ sigma = 0.3;
 
 
 
+lowest_error = 1;
+
+for C1 = [.01 .03 .1 .3 1 3 10 30]
+  for sigma1 = [.01 .03 .1 .3 1 3 10 30]
+    % Create model
+    model = svmTrain(X, y, C1, ...
+      @(x1, x2) gaussianKernel(x1, x2, sigma1));
+
+    % Get predictions for selected C1 and sigma1
+    predictions = svmPredict(model, Xval);
+    
+    % Calculate error for selected C1 and sigma1
+    error = mean(double(predictions ~= yval));
+    
+    % If new error is less than previous, assign new values to C and sigma
+    if error < lowest_error
+      C = C1;
+      sigma = sigma1;      
+      lowest_error = error;
+    endif
+  endfor
+endfor
 
 
 
