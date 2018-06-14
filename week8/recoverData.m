@@ -22,6 +22,18 @@ X_rec = zeros(size(Z, 1), size(U, 1));
 %               
 
 
+m = size(Z, 1);
+n = size(U, 2);
+
+for i = 1:m
+  v = Z(i, :)';
+  
+  for j = 1:n
+    recovered_j = v' * U(j, 1:K)';
+  
+    X_rec(i, j) = recovered_j;
+  endfor  
+endfor
 
 % =============================================================
 

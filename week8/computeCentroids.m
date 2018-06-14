@@ -29,6 +29,12 @@ centroids = zeros(K, n);
 
 
 
+% TODO: Implement vectorized solution
+for k = 1:K,
+  Ck = X(idx == k, :);
+  
+  centroids(k, :) = mean(Ck);
+endfor
 
 
 

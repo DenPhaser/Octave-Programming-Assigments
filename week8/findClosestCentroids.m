@@ -24,6 +24,18 @@ idx = zeros(size(X,1), 1);
 
 
 
+m = length(X);
+
+% TODO: Implement vectorized solution
+for i = 1:m
+  x = X(i, :);
+  
+  mu = sqrt(sum((x - centroids) .^ 2, 2));
+  
+  [_ c] = min(mu);
+  
+  idx(i) = c;
+endfor
 
 
 
