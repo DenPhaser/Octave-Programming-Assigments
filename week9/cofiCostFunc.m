@@ -46,6 +46,20 @@ Theta_grad = zeros(size(Theta));
 
 
 
+% Compute hypothesis matrix
+M = (X * Theta' - Y) .* R;
+
+% Compute regularization parameters
+reg_J = lambda / 2 * sum((Theta .^ 2)(:)) + lambda / 2 * sum((X .^ 2)(:));
+reg_X_grad = lambda * X;
+reg_Theta_grad = lambda * Theta;
+
+% Compute cost function with regularization)
+J = 1 / 2 * sum((M .^ 2)(:)) + reg_J;
+
+% Compute X and Theta gradients (with regularization)
+X_grad = M * Theta + reg_X_grad;
+Theta_grad = M' * X + reg_Theta_grad;
 
 
 
